@@ -1,47 +1,44 @@
 import React, { useEffect, useState } from "react";
-
-const API_BASE = "http://localhost:8000"; // change if needed
+import { generateDailyTargets,getDailyTargets } from "../../api";
 
 export default function DailyTargetPanel() {
   const [targets, setTargets] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // 🔹 Fetch today's targets
-  const fetchTargets = async () => {
-    try {
+  const fetchTargets = async () =>{
+    try{
       setLoading(true);
-      const res = await fetch(`${API_BASE}/daily_targets/`, {
-        credentials: "include",
-      });
-      if (!res.ok) throw new Error("Failed to load daily targets");
-      const data = await res.json();
-      setTargets(data);
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
+      const data= await getDailyTargets();
+      if( Array.isArray(data)) setTargets(data);
+      else setError("INvalid data format");
     }
-  };
+    catch(err){
+      setError(err.message || "Failded to laod daily targets")
+    }
+    finally{
+      setLoading(false)
+    }
+  }
 
-  // 🔹 Generate new targets for today
-  const generateTargets = async () => {
-    try {
+  const generateTargets = async() => {
+    try{
       setLoading(true);
-      const res = await fetch(`${API_BASE}/daily_targets/generate/`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify({ study_date: new Date().toISOString().split("T")[0] }),
-      });
-      if (!res.ok) throw new Error("Failed to generate targets");
+      const res=await generateDailyTargets();
+      if (res.error) throw new Error(res.error);
       await fetchTargets();
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
+
     }
-  };
+    catch(err){
+      setError(err.message || "Failed to generate targets");
+    }
+    finally{
+      setLoading(false)
+    }
+  }
+  
+
+
 
   useEffect(() => {
     fetchTargets();

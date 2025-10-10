@@ -7,13 +7,23 @@ export function AuthProvider({ children }) {
   const [token, setToken] = useState(localStorage.getItem('token') || '');
   const [user, setUser] = useState(null);
 
-  useEffect(() => {
-    if (token) {
-      getProfile(token).then(setUser);
-    } else {
-      setUser(null);
-    }
-  }, [token]);
+  const [loading, setLoading] = useState(true);
+
+useEffect(() => {
+  if (token) {
+    getProfile(token)
+      .then((u) => setUser(u))
+      .catch(() => {
+        setUser(null);
+        localStorage.removeItem('token');
+      })
+      .finally(() => setLoading(false));
+  } else {
+    setUser(null);
+    setLoading(false);
+  }
+}, [token]);
+
 
   const login = async (data) => {
     const res = await apiLogin(data);

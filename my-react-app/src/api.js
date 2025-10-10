@@ -88,14 +88,14 @@ export async function generateDailyTargets(data) {
 
 // ===================== Quiz =====================
 export async function startQuiz() {
-  const res = await fetch(`${API_BASE}/quiz/start/`, {
+  const res = await fetch(`${API_BASE}/quiz/concept-quiz/start/`, {
     headers: getAuthHeaders(true),
   });
   return await res.json();
 }
 
 export async function submitQuiz(data) {
-  const res = await fetch(`${API_BASE}/quiz/submit/`, {
+  const res = await fetch(`${API_BASE}/quiz/concept-quiz/submit/`, {
     method: 'POST',
     headers: getAuthHeaders(true),
     body: JSON.stringify(data),
@@ -107,6 +107,31 @@ export async function submitQuiz(data) {
 export async function checkAchievements() {
   const res = await fetch(`${API_BASE}/achievements/check_achievements/`, {
     headers: getAuthHeaders(true),
+  });
+  return await res.json();
+}
+
+
+// GET full tree with cache-busting
+export async function getProgressTree() {
+  const res = await fetch(`${API_BASE}/progress/user-progress/tree/`, {
+    headers: { 
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+      'Content-Type': 'application/json'
+    },
+    cache: 'no-store' // ensures fresh data
+  });
+  return await res.json();
+}
+
+// GET concept details with cache-busting
+export async function getConceptDetail(conceptId) {
+  const res = await fetch(`${API_BASE}/progress/user-progress/concept_detail/?concept_id=${conceptId}`, {
+    headers: { 
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+      'Content-Type': 'application/json'
+    },
+    cache: 'no-store' // ensures fresh data
   });
   return await res.json();
 }

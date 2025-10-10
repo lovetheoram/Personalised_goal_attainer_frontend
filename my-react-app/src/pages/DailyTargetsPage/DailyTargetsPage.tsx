@@ -9,7 +9,7 @@ const DailyTargetsPage = () => {
   const fetchDailyTargets = async () => {
     setLoading(true);
     try {
-      const res = await fetch("/api/daily_targets/");
+      const res = await fetch("target/daily_targets/");
       if (res.ok) {
         const data = await res.json();
         setTargets(data);

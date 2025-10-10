@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
-
+import { getFullProgress } from "../../api";
 const API_BASE = "http://localhost:8000"; // adjust if needed
 
 export default function ProgressVisuals() {
@@ -13,20 +13,18 @@ export default function ProgressVisuals() {
   }, []);
 
   const fetchProgress = async () => {
-    try {
-      setLoading(true);
-      const res = await fetch(`${API_BASE}/user-progress/full_progress/`, {
-        credentials: "include",
-      });
-      if (!res.ok) throw new Error("Failed to load progress");
-      const data = await res.json();
-      setProgress(data);
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
+  try {
+    setLoading(true);
+    const data = await getFullProgress();
+    setProgress(data);
+  } catch (err) {
+    console.error("Error fetching progress:", err);
+    setError(err?.message || "Something went wrong");
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   // 🔹 Aggregate Data
   const masteryOverTime = progress.map((p, i) => ({
