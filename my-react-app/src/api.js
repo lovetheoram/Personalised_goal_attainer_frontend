@@ -1,5 +1,5 @@
-const API_BASE = 'http://localhost:8000'; // Change to your backend URL
-
+// const API_BASE = 'http://localhost:8000'; // Change to your backend URL
+const API_BASE= 'https://lovetheoram.pythonanywhere.com'
 function getAuthHeaders(authRequired=true) {
   const token = localStorage.getItem('token');
   if (authRequired && token)

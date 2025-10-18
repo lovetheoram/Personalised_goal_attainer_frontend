@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
 import { getFullProgress } from "../../api";
-const API_BASE = "http://localhost:8000"; // adjust if needed
 
 export default function ProgressVisuals() {
   const [progress, setProgress] = useState([]);
